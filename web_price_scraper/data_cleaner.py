@@ -1,5 +1,4 @@
 import json
-from os import sep
 
 
 final_products = []
@@ -20,14 +19,14 @@ def jumia_clean():
                 price = item['price']
                 image_url = item['img_link']
                 product_url = item['product_link']
-                vendor = 'Jumia'
+                vendor = 'ea24722d-4aca-4ea3-987e-71d8d6fa239c' # Jumia Vendor id
                 categories = list(item['category'].split('/'))
 
                 # Product Definition / Dictionary
                 jumia_products = {
                     'name': product_name,
                     'price': price,
-                    'images': [image_url],
+                    'images': image_url,
                     'product_url': product_url,
                     'vendor': vendor,
                     'category': categories
@@ -44,20 +43,20 @@ def shopit_clean():
 
         for item in data:
             # Drop null entries
-            if item == {"name": "null", "price": "null", "product_link": "null", "img_link": "null"}:
+            if item == {'name': None, 'price': None, 'product_link': None, 'img_link': None}:
                 pass
             else:
                 product_name = item['name']
                 price = item['price']
                 image_url = item['img_link']
                 product_url = item['product_link']
-                vendor = 'Shopit'
+                vendor = '2d5bee0c-c23c-4459-af27-9f5573dc5bbf'# Shopit Vendor id
 
                 # Product Definition / Dictionary
                 shopit_products = {
                     'name': product_name,
                     'price': price,
-                    'images': [image_url],
+                    'images': image_url,
                     'product_url': product_url,
                     'vendor': vendor
                 }
@@ -73,8 +72,8 @@ def kilimall_clean():
             url = 'https://www.kilimall.co.ke/new/goods/'
             product_name = item['name']
             price = item['price']
-            image_url = [item['images']['ORIGIN']]
-            vendor = 'Kilimall'
+            image_url = item['images']['ORIGIN']
+            vendor = '29179fc6-5e74-4d70-8b77-ef2594c93ddd' # Kilimall Vendor id
             product_url = [str(item['goods_id'])] + list(str(item['name']).split())
 
             # Product Definition / Dictionary
@@ -96,16 +95,20 @@ kilimall_clean()
 def data_prep(final_products):
     for idx, item in enumerate(final_products):
         production_dict = {
-            '_id' : idx,
+            '_id' : str(idx),
             '_type' : 'product',
             'title' : item['name'],
             'defaultProductVariant' : {
                 '_type' : 'productVariant',
                 'price' : item['price'],
-                'images' : item['images'],
+                'image' : item['images'],
+               
             },
             'product_url' : item['product_url'],
-            'vendor' : item['vendor']
+            'vendor' : {
+            	'_type': 'reference',
+            	'_ref' : item['vendor'],
+            },
 
         }
         
