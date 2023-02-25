@@ -6,7 +6,7 @@ production = []
 
 def jumia_clean():
     # Open file with jumia products
-    with open('./jumia.json') as jumia_json:
+    with open('./Jumia1.json') as jumia_json:
         data = json.load(jumia_json)
 
         # Data cleaning loop
@@ -38,16 +38,19 @@ def jumia_clean():
 
 def shopit_clean():
     # Open shopit.json
-    with open('./shopit.json') as shopit_json:
+    with open('./Shopit1.json') as shopit_json:
         data = json.load(shopit_json)
 
         for item in data:
             # Drop null entries
-            if item == {'name': None, 'price': None, 'product_link': None, 'img_link': None}:
+            if item == {"name": None, "price": None, "product_link": None, "img_link": None}:
+                pass
+            if item['price'] == None:
                 pass
             else:
                 product_name = item['name']
-                price = item['price']
+                price = item['price'].replace(".00","")
+                #price = ''.join([i for i in list(price1) if i != ","])
                 image_url = item['img_link']
                 product_url = item['product_link']
                 vendor = '2d5bee0c-c23c-4459-af27-9f5573dc5bbf'# Shopit Vendor id
@@ -65,7 +68,7 @@ def shopit_clean():
 
 
 def kilimall_clean():
-    with open('./kilimall.json') as kilimall_json:
+    with open('./Kilimall1.json') as kilimall_json:
         data = json.load(kilimall_json)
 
         for item in data:
@@ -118,7 +121,7 @@ def data_prep(final_products):
 data_prep(final_products)
 
 # Convertion to NDJson
-with open('./production_data.ndjson', 'w') as f:
+with open('./Production_data1.ndjson', 'w') as f:
     # Writing items to a ndjson file
     for item in production:
         json.dump(item, f)

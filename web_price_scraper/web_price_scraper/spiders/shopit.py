@@ -15,7 +15,7 @@ class ShopitSpider(scrapy.Spider):
                     yield response.follow(link, callback=self.parse_categories)
 
     def parse_categories(self, response):
-        products = response.css('div.ty-column3')
+        products = response.css('div.ty-column4')
         for product in products:
             yield {
                 'name': product.css('a.product-title::text').get(),
